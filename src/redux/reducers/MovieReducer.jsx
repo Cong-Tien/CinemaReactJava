@@ -17,7 +17,10 @@ const initialState = {
             "dangChieu": true,
             "sapChieu": true
           }
-    ]
+    ],
+    dangChieu:false,
+    sapChieu:false,
+    arrMovieDefault: []
 }
 
 const MovieReducer = createSlice({
@@ -25,13 +28,27 @@ const MovieReducer = createSlice({
   initialState,
   reducers: {
     getListMovieAction: (state,action) => {
-        const arrMovie = action.payload;
-        state.arrMovie=arrMovie;
-    }
+      state.arrMovie=action.payload;
+      state.arrMovieDefault=action.payload;
+    },
+    getPhimDangChieu: (state,action) => {
+      state.dangChieu = !state.dangChieu;
+      if(state.dangChieu == state.sapChieu){
+        state.sapChieu = !state.sapChieu;
+      }
+      state.arrMovie=state.arrMovieDefault.filter(movie => movie.dangChieu === state.dangChieu);
+    },
+    getPhimSapChieu: (state,action) => {
+      state.sapChieu = !state.sapChieu;
+      if(state.sapChieu == state.dangChieu){
+        state.dangChieu = !state.dangChieu;
+      }
+      state.arrMovie=state.arrMovieDefault.filter(movie => movie.sapChieu === state.sapChieu);
+    },
   }
 });
 
-export const {getListMovieAction} = MovieReducer.actions
+export const {getListMovieAction,getPhimDangChieu,getPhimSapChieu} = MovieReducer.actions
 
 export default MovieReducer.reducer
 

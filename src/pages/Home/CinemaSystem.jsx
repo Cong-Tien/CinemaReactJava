@@ -1,11 +1,15 @@
 import { Radio, Space, Tabs } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function CinemaSystem() {
+export default function CinemaSystem(props) {
     const [tabPosition, setTabPosition] = useState('left')
     const changeTabPosition = (e) => {
         setTabPosition(e.target.value)
     }
+
+    useEffect(() => {
+        console.log("props123", props);
+    },[])
     return (
         <div className='container'>
             <Space

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Carousel } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBannerApi } from '../../redux/reducers/BannerReducer';
+import './HomeCarousel.css'
 
 const contentStyle = {
     height: '660px',
