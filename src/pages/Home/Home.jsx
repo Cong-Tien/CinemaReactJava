@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import HomeCarousel from '../../components/HomeCarousel/HomeCarousel'
 import Movie from '../../components/Movie/Movie'
@@ -12,7 +12,6 @@ export default function Home() {
     const dispatch = useDispatch()
     const { arrMovie } = useSelector((state) => state.MovieReducer)
     const { arrCinema} = useSelector(state => state.CinemaReducer)
-    console.log(arrMovie)
 
     useEffect(() => {
         const actionMovie = getMovieApi()

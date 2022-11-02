@@ -17,7 +17,6 @@ const contentStyle = {
 export default function HomeCarousel() {
     const dispatch = useDispatch();
     const {arrBanner} = useSelector(state => state.BannerReducer);
-    console.log(arrBanner);
 
     useEffect(() => {
         const action = getBannerApi();

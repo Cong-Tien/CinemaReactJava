@@ -14,6 +14,7 @@ import Login from './pages/Login/Login';
 import Contact from './pages/Contact/Contact';
 import Register from './pages/Register/Register';
 import New from './pages/New/New';
+import Detail from './pages/Detail/Detail';
 
 export const history = createBrowserHistory()
 
@@ -29,9 +30,9 @@ root.render(
                     <Route path="home" element={<Home />}></Route>
                     <Route path="register" element={<Register />}></Route>
                     <Route path="new" element={<New />}></Route>
-                    {/* <Route path="detail">
-                        <Route path=":id" element={<Abc />}></Route>
-                    </Route> */}
+                    <Route path="detail">
+                        <Route path=":id" element={<Detail />}></Route>
+                    </Route>
                     <Route path="*" element={<Navigate to={''} />}></Route>
                 </Route>
             </Routes>
