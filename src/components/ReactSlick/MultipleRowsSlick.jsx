@@ -54,6 +54,7 @@ export default function MultipleRowsSlick(props) {
         slidesToShow: 1.8,
         speed: 500,
         rows: 2,
+        autoplay:true,
         slidesPerRow: 2,
         variableWidth: true,
         nextArrow: <SampleNextArrow />,

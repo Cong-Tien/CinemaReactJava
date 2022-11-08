@@ -12,10 +12,13 @@ const CinemaReducer = createSlice({
     getListCinemaAction: (state,action) => {
         state.arrCinema=action.payload
       },
+      getAllCinemaAction: (state,action) => {
+        state.arrCinema=action.payload
+      },
   }
 });
 
-export const {getListCinemaAction} = CinemaReducer.actions
+export const {getListCinemaAction,getAllCinemaAction} = CinemaReducer.actions
 
 export default CinemaReducer.reducer
 
@@ -28,3 +31,16 @@ export const getCinemaApi = () => {
       dispatch(action);
     }
   } 
+
+export const getAllCinemaApi = () => {
+      const result = http.get("QuanLyRap/LayThongTinHeThongRap");
+      return result
+      //let result = await managerMovieService.layDanhSachBanner();
+}
+export const getThongTinCumRap = (maHTR) => {
+  return  http.get("QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=" + maHTR);
+} 
+
+export const taoLichChieu = (thongTinLichChieu) => {
+     return http.post("QuanLyDatVe/TaoLichChieu",thongTinLichChieu);
+  }

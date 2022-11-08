@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default function Movie(props) {
     const { phim } = props
@@ -14,7 +15,8 @@ export default function Movie(props) {
             <p className="leading-relaxed mb-3 h-16">
                 {phim.moTa.length > 100 ? <span>{phim.moTa.slice(0,120)} ...</span> : <span>{phim.moTa}</span>}
             </p>
-            <a className="text-indigo-500 inline-flex items-center">
+            
+            <NavLink to={`/detail/${phim.maPhim}`} className="text-indigo-500 inline-flex items-center">
                 ĐẶT VÉ
                 <svg
                     className="w-4 h-4 ml-2"
@@ -28,7 +30,8 @@ export default function Movie(props) {
                     <path d="M5 12h14" />
                     <path d="M12 5l7 7-7 7" />
                 </svg>
-            </a>
+            </NavLink>
+            
         </div>
     )
 }

@@ -14,7 +14,7 @@ function CinemaSystem(props) {
     const renderCinemaSystem = () => {
         return props.arrCinema?.map((cinema, index) => {
             return (
-                <Tabs.TabPane
+                <Tabs.TabPane className='bg-white'
                     tab={<img className="rounded-full" width="70" src={cinema.logo} />}
                     key={index}
                 >
@@ -28,16 +28,19 @@ function CinemaSystem(props) {
                                                 className="rounded-full"
                                                 width="20%"
                                                 height="20%"
-                                                src="https://movie-booking-project.vercel.app/img/cumRap/cinestar-hai-ba-trung-15383833704033.jpg"
+                                                //src="https://cafefcdn.com/203337114487263232/2021/5/3/photo-1-16200357416631448156117.jpg"
+                                                src={cumRap.hinhAnh}
                                             />
                                             <br />
                                             <div>
                                                 <p className="text-left mx-5">{cumRap.tenCumRap}</p>
                                                 <p className="text-left px-5">
                                                     {cumRap.diaChi.length > 15 ? (
-                                                        <p>{cumRap.diaChi.slice(0, 40)} ...</p>
+                                                        <span>
+                                                            {cumRap.diaChi.slice(0, 40)} ...
+                                                        </span>
                                                     ) : (
-                                                        <p>{cumRap.diaChi}</p>
+                                                        <span>{cumRap.diaChi}</span>
                                                     )}
                                                 </p>
                                             </div>
@@ -46,7 +49,7 @@ function CinemaSystem(props) {
                                     key={index}
                                 >
                                     {/* load Phim */}
-                                    {cumRap.danhSachPhim.slice(0,5).map((phim, index) => {
+                                    {cumRap.danhSachPhim.slice(0, 5).map((phim, index) => {
                                         return (
                                             <Fragment key={index}>
                                                 <div className="flex my-5">
@@ -57,7 +60,8 @@ function CinemaSystem(props) {
                                                             alt={phim.tenPhim}
                                                             onError={({ currentTarget }) => {
                                                                 currentTarget.onerror = null // prevents looping
-                                                                currentTarget.src ='https://scontent.fsgn5-11.fna.fbcdn.net/v/t39.30808-6/302033044_1534548460375461_2462156735916943716_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=LL2dMoYmeKMAX9PXgzl&_nc_ht=scontent.fsgn5-11.fna&oh=00_AfDkFXMnRwQmTbzvqcCkP6yd6YCZGZUTkk-raJxc9Ed_Sg&oe=6365D938'
+                                                                currentTarget.src =
+                                                                    'https://scontent.fsgn5-11.fna.fbcdn.net/v/t39.30808-6/302033044_1534548460375461_2462156735916943716_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=LL2dMoYmeKMAX9PXgzl&_nc_ht=scontent.fsgn5-11.fna&oh=00_AfDkFXMnRwQmTbzvqcCkP6yd6YCZGZUTkk-raJxc9Ed_Sg&oe=6365D938'
                                                             }}
                                                         />
                                                         <div className="ml-2">
@@ -71,7 +75,7 @@ function CinemaSystem(props) {
                                                                     .map((lichChieu, index) => {
                                                                         return (
                                                                             <NavLink
-                                                                                to="/"
+                                                                                to={`/checkout/${lichChieu.maLichChieu}`}
                                                                                 key={index}
                                                                                 className="text-xl text-green-400"
                                                                             >
