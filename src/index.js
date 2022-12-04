@@ -21,7 +21,7 @@ import Checkout from './pages/Checkout/Checkout'
 import { Suspense, lazy } from 'react'
 import Loading from './components/Loading/Loading'
 import { DOAMIN_SOCKET } from './util/config'
-import * as signalR from '@aspnet/signalr'
+//import * as signalR from '@aspnet/signalr'
 //import đa ngôn ngữ
 import './i18n';
 import Profile from './pages/Profile/Profile'
@@ -31,13 +31,14 @@ import ShowTime from './pages/Admin/Showtime/ShowTime'
 import Dashboard from './pages/Admin/Dashborad/Dashboard'
 import AddMovie from './pages/Admin/Movies/AddMovie'
 import EditMovie from './pages/Admin/Movies/EditMovie'
+import MessagerBoot from './components/MessagerBoot'
 
 //const CheckoutTemplateLazy = lazy(() => import('./templates/CheckoutTemplate/CheckoutTemplate.jsx'))
 export const history = createBrowserHistory()
 
-export const connection = new signalR.HubConnectionBuilder().withUrl(`${DOAMIN_SOCKET}/DatVeHub`).configureLogging(signalR.LogLevel.Information).build();
+//export const connection = new signalR.HubConnectionBuilder().withUrl(`${DOAMIN_SOCKET}/DatVeHub`).configureLogging(signalR.LogLevel.Information).build();
 const root = ReactDOM.createRoot(document.getElementById('root'))
-connection.start().then(() => {
+// connection.start().then(() => {
     root.render(
         <Provider store={store}>
             <HistoryRouter history={history}>
@@ -90,12 +91,13 @@ connection.start().then(() => {
                     </Routes>
                 {/* </Suspense> */}
             </HistoryRouter>
+            <MessagerBoot/>
         </Provider>
     )
     
-}).catch(err =>{
-    console.log(err);
-})
+// }).catch(err =>{
+//     console.log(err);
+// })
 
 
 

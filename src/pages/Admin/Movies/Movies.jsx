@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { history } from '../../..'
 import { getMovieApi, xoaPhimApi } from '../../../redux/reducers/MovieReducer'
+import { HOST_BE } from '../../../util/config'
 
 
 const { Search } = Input
@@ -32,21 +33,23 @@ export default function Movies() {
     const columns = [
         {
             title: 'Mã phim',
-            dataIndex: 'maPhim',
+            dataIndex: 'id',
             value: (text,object) => {return <span>{text}</span>},
-            sorter: (a, b) => a.maPhim - b.maPhim,
+            sorter: (a, b) => a.id - b.id,
             sortDirections: ['descend', 'ascend'],
             sortOrder:'descend',
             width: '10%',
+            className:"text-center"
         },
         {
             title: 'Hình ảnh',
-            dataIndex: 'hinhAnh',
+            dataIndex: 'poster',
             render: (text,movie) => {
                 return <Fragment>
-                    <img src={movie.hinhAnh} width={100} height={150} onError={(e) => {
+                    <img src={movie.poster?.substring(0,4) != "http" ? `${HOST_BE}/${movie?.poster}`: movie.poster} width={100} height={150} onError={(e) => {
                         e.target.onError = null; e.target.src='https://img.meta.com.vn/Data/image/2021/08/02/anh-xin-loi-6.jpg'
                     }}/>
+                    
                 </Fragment>
             },
             //sorter: (a, b) => a.age - b.age,
@@ -63,8 +66,19 @@ export default function Movies() {
                 }
                 return -1
             },
-            width: '30%',
+            width: '10%',
             sortDirections: ['descend','ascend']
+        },
+        {
+            title: 'Trailer',
+            dataIndex: 'trailer',
+            render: (text,movie) => {
+                return <Fragment>
+                    {/* <iframe style={{width:100,height:100}} src={movie.trailer}></iframe> */}
+                    <p>{movie.trailer}</p>
+                </Fragment>
+            },
+            width: '15%',
         },
         {
             title: 'Mô tả',
@@ -82,19 +96,33 @@ export default function Movies() {
                 {movie.moTa.length > 80 ? movie.moTa.substr(0,80) + ' ...' : movie.moTa}
             </Fragment>},
             sortDirections: ['descend','ascend'],
-            width: '30%',
+            width: '20%',
+        },
+        {
+            title: 'Ngày khởi chiếu',
+            dataIndex: 'ngayKhoiChieu',
+            sorter: (a, b) => {
+                let tenPhimA = a.tenPhim.toLowerCase().trim();
+                let tenPhimB = b.tenPhim.toLowerCase().trim();
+                if(tenPhimA > tenPhimB){
+                    return 1
+                }
+                return -1
+            },
+            width: '15%',
+            sortDirections: ['descend','ascend']
         },
         {
             title: 'Tác vụ',
             dataIndex: 'maPhim',
             render: (text,movie) => { return <Fragment>
-                <NavLink key={1} className=' mr-3 text-2xl' to={`/admin/movies/edit/${movie.maPhim}`}><EditOutlined className='text-blue-400'/></NavLink>
+                <NavLink key={1} className=' mr-3 text-2xl' to={`/admin/movies/edit/${movie.id}`}><EditOutlined className='text-blue-400'/></NavLink>
                 <span style={{cursor:"pointer"}} key={2} className=' text-2xl mr-3' onClick={() => {
                     if(window.confirm('Bạn có chắc muôn xóa phim ' + movie.tenPhim + " ?")){
-                        dispatch(xoaPhimApi(movie.maPhim))
+                        dispatch(xoaPhimApi(movie.id))
                     }
                 }}><DeleteOutlined style={{color:"red"}} className='text-red-500'/></span>
-                <NavLink key={3} className='text-2xl text-green-400' to={`/admin/showtime/${movie.maPhim}/${movie.tenPhim}`} onClick={() => {
+                <NavLink key={3} className='text-2xl text-green-400' to={`/admin/showtime/${movie.id}/${movie.tenPhim}`} onClick={() => {
                     localStorage.setItem('movieParams',JSON.stringify(movie))
                 }}><CalendarOutlined /></NavLink>
             </Fragment>},

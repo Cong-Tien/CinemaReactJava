@@ -45,7 +45,7 @@ export default function AddMovie() {
                     formData.append(key,value[key])
                 }
                 else{
-                    formData.append('File', value.hinhAnh,value.hinhAnh.name)
+                    formData.append('hinhAnh', value.hinhAnh,value.hinhAnh.name)
                 }
             }   
             //gọi api đưa form data lên DB
@@ -77,7 +77,7 @@ export default function AddMovie() {
             let reader = new FileReader()
             reader.readAsDataURL(file)
             reader.onload = (e) => {
-                //console.log(e.target.result)
+                console.log(e.target.result)
                 setImgSrc(e.target.result)
             }
             formik.setFieldValue('hinhAnh',file)

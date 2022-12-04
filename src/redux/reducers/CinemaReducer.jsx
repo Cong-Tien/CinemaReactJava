@@ -25,22 +25,27 @@ export default CinemaReducer.reducer
 //=================== asyn action ===================
 export const getCinemaApi = () => {
     return async dispatch => {
-      let result = await http.get("QuanLyRap/LayThongTinLichChieuHeThongRap");
+      let result = await http.get("/system/systemShowtime");
       //let result = await managerMovieService.layDanhSachBanner();
-      const action =getListCinemaAction(result.data.content);
+      const action =getListCinemaAction(result.data.data);
+      console.log(result.data);
       dispatch(action);
     }
   } 
 
 export const getAllCinemaApi = () => {
-      const result = http.get("QuanLyRap/LayThongTinHeThongRap");
+      const result = http.get("/system");
       return result
+      
       //let result = await managerMovieService.layDanhSachBanner();
 }
 export const getThongTinCumRap = (maHTR) => {
-  return  http.get("QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=" + maHTR);
+  return  http.post("/cinema?maHTR=" + maHTR);
+} 
+export const getThongTinPhong = (maCumRap) => {
+  return  http.get("/room?maCumRap=" + maCumRap);
 } 
 
 export const taoLichChieu = (thongTinLichChieu) => {
-     return http.post("QuanLyDatVe/TaoLichChieu",thongTinLichChieu);
+     return http.post("/showtime",thongTinLichChieu);
   }

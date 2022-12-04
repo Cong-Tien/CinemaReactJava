@@ -1,16 +1,21 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useParams } from 'react-router-dom'
+import { over } from 'stompjs'
+import Sockjs from 'sockjs-client'
 import {
     chuyenTabChonVe,
     chuyenTabThongTinVe,
     datGhe,
+    datGheAction,
     getGheNguoiKhacDat,
     getThongTinPhongVeApi,
     getVeDangDat,
     guiThongtinDatVe,
+    pushVeDangDat,
 } from '../../redux/reducers/TicketReducer'
 import './Checkout.css'
+import _ from 'lodash'
 import { Ghe } from '../../_core/models/ThongTinPhongVe'
 import {
     CheckOutlined,
@@ -20,14 +25,16 @@ import {
     UserAddOutlined,
     UserDeleteOutlined,
 } from '@ant-design/icons'
-import _ from 'lodash'
+
 import { ThongTinDatVe } from '../../_core/models/ThongTinDatVe'
 import { Tabs } from 'antd'
 import { lichSuDatVeApi } from '../../redux/reducers/UserReducer'
 import moment from 'moment'
-import { connection, history } from '../../index.js'
-import { TOKEN_USER, USER_LOGIN } from '../../util/config'
+//import { connection, history } from '../../index.js'
+import {history } from '../../index.js'
+import { DOAMIN_SOCKET, TOKEN_USER, USER_LOGIN } from '../../util/config'
 
+export var stompClient = null
 export function Checkout(props) {
     const dispatch = useDispatch()
     const { id } = useParams()
@@ -40,59 +47,116 @@ export function Checkout(props) {
     useEffect(() => {
         const action = getThongTinPhongVeApi(id)
         dispatch(action)
-
+        
+        let Sock = new Sockjs(DOAMIN_SOCKET)
+        stompClient = over(Sock)
+        stompClient.connect({}, onConnected, onError)
+        
         // có 1 client nào thực hiện việc đặt vé thành công mình sẽ reload lại danh sách phòng vé của lịch chiếu đó
-        connection.on('datVeThanhCong', () => {
-            dispatch(action)
-        })
+        // connection.on('datVeThanhCong', () => {
+        //     dispatch(action)
+        // })
 
         //Vừa vào trang load lại tất cả ghế của các người khác đang đặt
-        connection.invoke('loadDanhSachGhe', id)
+        //connection.invoke('loadDanhSachGhe', id)
+
 
         //load danh sách ghế đang đặt từ server về
-        connection.on('loadDanhSachGheDaDat', (dsGheKhachDat) => {
-            console.log('Danh Sach Ghe Khach Dat', dsGheKhachDat)
-            //B1: Loại mình ra khỏi danh sách
-            dsGheKhachDat = dsGheKhachDat.filter((item) => item.taiKhoan !== userLogin.taiKhoan)
-            //B2; gộp tất cả danh sách khách đặt thành 1 mảng lớn
-            let arrGheKhachDat = dsGheKhachDat.reduce((result, item, index) => {
-                let arrGhe = JSON.parse(item.danhSachGhe)
-                return [...result, ...arrGhe]
-            }, [])
-            console.log('===========', arrGheKhachDat)
-            // Đưa ghế người khác đặt lên cập nhật redux
-            arrGheKhachDat = _.uniq(arrGheKhachDat, 'maGhe')
-            dispatch(getGheNguoiKhacDat(arrGheKhachDat))
+        // connection.on('loadDanhSachGheDaDat', (dsGheKhachDat) => {
+        //     console.log('Danh Sach Ghe Khach Dat', dsGheKhachDat)
+        //     //B1: Loại mình ra khỏi danh sách
+        //     dsGheKhachDat = dsGheKhachDat.filter((item) => item.taiKhoan !== userLogin.taiKhoan)
+        //     //B2; gộp tất cả danh sách khách đặt thành 1 mảng lớn
+        //     let arrGheKhachDat = dsGheKhachDat.reduce((result, item, index) => {
+        //         let arrGhe = JSON.parse(item.danhSachGhe)
+        //         return [...result, ...arrGhe]
+        //     }, [])
+        //     console.log('===========', arrGheKhachDat)
+        //     // Đưa ghế người khác đặt lên cập nhật redux
+        //     arrGheKhachDat = _.uniq(arrGheKhachDat, 'maGhe')
+        //     dispatch(getGheNguoiKhacDat(arrGheKhachDat))
 
-            // Cài đặt sự kiện khi reload trang
-            window.addEventListener('beforeunload', clearGhe)
+        //     // Cài đặt sự kiện khi reload trang
+        //     window.addEventListener('beforeunload', clearGhe)
 
-            return () => {
-                clearGhe()
-                window.removeEventListener('beforeunload', clearGhe)
-            }
-        })
+        //     return () => {
+        //         clearGhe()
+        //         window.removeEventListener('beforeunload', clearGhe)
+        //     }
+        // })
+        // Cài đặt sự kiện khi reload trang
+        window.addEventListener('beforeunload', clearGhe)
+        return () => {
+                    clearGhe()
+                    window.removeEventListener('beforeunload', clearGhe)
+                }
     }, [])
-
-    const clearGhe = function (event) {
-        connection.invoke('huyDat', userLogin.taiKhoan, id)
+    const clearGhe =() => {
+        if(stompClient){
+            let infor = {
+                email:userLogin.id,
+                list:[],
+                maLC:id
+            }
+            stompClient.send('/app/huyDat',{},JSON.stringify(infor))
+        }
     }
+
+    const onConnected = () => {
+        stompClient.subscribe('/booking/danhSachGheDat', (payload => {
+            let payloadData = JSON.parse(payload.body)
+            
+            payloadData = payloadData.filter(item => item.idUser !== userLogin.id)
+            payloadData = _.uniqBy(payloadData,"id")
+            console.log("Danh sach ghe khach dat",payloadData);
+            const action = getGheNguoiKhacDat(payloadData);
+            dispatch(action)
+        }))
+        stompClient.subscribe('/booking/datVeThanhCong', (payload => {
+            const action = getThongTinPhongVeApi(id)
+            dispatch(action)
+        }))
+        if(stompClient){
+            let infor = {
+                email:userLogin.id,
+                list:[],
+                maLC:id
+            }
+            stompClient.send('/app/loadDanhSachGhe',{},JSON.stringify(infor))
+        }
+    }
+    const onError = (err) => {
+        console.log("loi ne", err)
+    }
+    const sendPublicMess = () => {
+        if(stompClient){
+            stompClient.send('/app/datGhe',{},JSON.stringify("Hello"))
+        }
+    }
+    // const onPublicMessReceived = (payload) => {
+    //     //let payloadData = JSON.parse(payload.body)
+    //     let payloadData = payload
+    //     console.log("payloadData====",payloadData);
+    // }
+    // const clearGhe = function (event) {
+    //     connection.invoke('huyDat', userLogin.taiKhoan, id)
+    // }
     const renderSeat = () => {
         return danhSachGhe?.map((seat, index) => {
             let classGheVip = seat.loaiGhe === 'Vip' ? 'gheVip' : ''
             let classGheDaDat = seat.daDat === true ? 'gheDaDat' : ''
             let classGheDangDat = ''
-            let indexGheDD = danhSachGheDangDat.findIndex((gheDD) => gheDD.maGhe === seat.maGhe)
+            let indexGheDD = danhSachGheDangDat.findIndex((gheDD) => gheDD.id === seat.id)
             if (indexGheDD != -1) {
                 classGheDangDat = 'gheDangDat'
             }
             let classGheCuaBan = ''
-            if (userLogin.taiKhoan === seat.taiKhoanNguoiDat) {
+            if (userLogin.id === seat.idUser&&seat.daDat==true) {
                 classGheCuaBan = 'gheDaDuocDat'
             }
             //check mỗi ghế xem có phải ghế người khác đang đặt không
             let classGheKhachDat = ''
-            let indexGheKD = danhSachGheKhachDat.findIndex((gheKD) => gheKD.maGhe === seat.maGhe)
+            let indexGheKD = danhSachGheKhachDat.findIndex((gheKD) => gheKD.id === seat.id)
             if (indexGheKD !== -1) {
                 classGheKhachDat = 'gheKhachDat'
             }
@@ -122,7 +186,7 @@ export function Checkout(props) {
                         ) : classGheKhachDat !== '' ? (
                             <SmileOutlined style={{ marginBottom: '5px', fontWeight: 'bold' }} />
                         ) : (
-                            seat.stt
+                            seat.ghe
                         )}
                     </button>
                     {(index + 1) % 16 === 0 ? <br /> : ''}
@@ -136,9 +200,9 @@ export function Checkout(props) {
             <div className="grid grid-cols-12">
                 <div className="col-span-9">
                     <div className="w-5/6 mx-auto">
-                        <button className="h-full shadow-xl w-full relative  inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                        <button onClick={sendPublicMess} className="h-full shadow-xl w-full relative  inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                             <span className="text-2xl shadow-xl relative w-full h-full py-3 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                                Screen
+                                SCREEN
                             </span>
                         </button>
                     </div>
@@ -237,7 +301,7 @@ export function Checkout(props) {
                                 return (
                                     <span key={index} className="text-green-400 text-xl">
                                         {' '}
-                                        {gheDD.stt}
+                                        {gheDD.ghe}
                                     </span>
                                 )
                             })}
@@ -272,9 +336,10 @@ export function Checkout(props) {
                                 const thongTinDatVe = new ThongTinDatVe()
                                 thongTinDatVe.maLichChieu = id
                                 thongTinDatVe.danhSachVe = danhSachGheDangDat
-                                console.log(thongTinDatVe)
+                                //console.log(thongTinDatVe)
+                                console.log(danhSachGheDangDat)
                                 //console.log(localStorage.getItem(TOKEN_USER))
-                                dispatch(guiThongtinDatVe(thongTinDatVe))
+                                dispatch(guiThongtinDatVe(danhSachGheDangDat,userLogin.id,id))
                             }}
                             className="bg-green-500 cursor-pointer text-white w-full text-center py-3 text-2xl"
                         >
@@ -303,7 +368,7 @@ export default function (props) {
     const operations = <Fragment>
             {!_.isEmpty(userLogin) ? <Fragment> <button onClick={() => {
                 history.push('/profile')
-            }}><div style={{width:40,height:40}} className='m-auto rounded-full flex justify-center items-center bg-red-200 text-2xl'>{userLogin.taiKhoan.substr(0,1)}</div> Hello ! {userLogin.taiKhoan} </button> <button className='text-blue-400' onClick={()=> {
+            }}><div style={{width:40,height:40}} className='m-auto rounded-full flex justify-center items-center bg-red-200 text-2xl'>{userLogin.name.substr(0,1)}</div> Hello ! {userLogin.name} </button> <button className='text-blue-400' onClick={()=> {
                 localStorage.removeItem(USER_LOGIN);
                 localStorage.removeItem(TOKEN_USER);
                 history.push('/home')
@@ -338,20 +403,20 @@ function HistoryBooking(props) {
     const dispatch = useDispatch()
     console.log('thong tin nguoi dung', thongTinNguoiDung)
     useEffect(() => {
-        const action = lichSuDatVeApi()
+        const action = lichSuDatVeApi(userLogin.accessToken)
         dispatch(action)
     }, [])
 
     const renderTicketItem = () => {
-        return thongTinNguoiDung.thongTinDatVe?.map((ticket, index) => {
-            const seats = _.first(ticket.danhSachGhe)
+        return thongTinNguoiDung?.map((ticket, index) => {
+            const seats = _.first(ticket.ticket)
             return (
                 <div key={index} className="p-2 lg:w-1/3 md:w-1/2 w-full">
                     <div className="h-full flex items-center border-gray-200 border p-4 rounded-lg">
                         <img
                             alt="team"
-                            className="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4"
-                            src="https://dummyimage.com/80x80"
+                            className="w-40 h-40 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4"
+                            src={ticket.hinhAnh}
                         />
                         <div className="flex-grow">
                             <h2 className="text-gray-900 title-font font-medium">
@@ -359,19 +424,17 @@ function HistoryBooking(props) {
                             </h2>
                             <p className="text-gray-500">
                                 Giờ chiếu:
-                                {moment(ticket.ngayDat).format(' hh:mm A ')}- Ngày chiếu:
-                                {moment(ticket.ngayDat).format(' DD/MM/YYYY')}
+                                {moment(ticket.thoiGian).format(' hh:mm A ')}<br/>- Ngày chiếu:
+                                {moment(ticket.thoiGian).format(' DD/MM/YYYY')}
                             </p>
-                            <p className="text-gray-500">- Địa điểm: {seats.tenHeThongRap}</p>
+                            <img src={ticket.logoCinema} className="w-20 h-20 rounded-full"></img>
+                            <p className="text-gray-500">{ticket.diaChi}</p>
                             <p className="text-gray-500">
-                                - Tên Rạp: {seats.tenCumRap} - Ghế:{' '}
-                                {ticket.danhSachGhe?.map((ghe, index) => {
-                                    return (
+                                - Phòng: {ticket.phongChieu} - Ghế:{' '}
+                                
                                         <span className="text-green-400" key={index}>
-                                            {'[ ' + ghe.tenGhe + ' ] '}
+                                            {'[ ' + ticket.ticket.ghe + ' ] '}
                                         </span>
-                                    )
-                                })}
                             </p>
                         </div>
                     </div>

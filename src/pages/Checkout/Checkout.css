@@ -13,7 +13,7 @@
   
   
   .gheDaDat {
-    background-color: rgb(232, 76, 76);
+    background-color: rgb(232, 76, 76) !important;
     cursor: no-drop;
   }
   
@@ -27,7 +27,7 @@
   }
 
   .gheDaDuocDat { /*ghế được chính mình đặt */
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(246, 246, 246) !important;
     -webkit-box-shadow: -1px 2px 18px -6px orange; 
     box-shadow: -1px 2px 18px -6px orange;
     color: orange !important;

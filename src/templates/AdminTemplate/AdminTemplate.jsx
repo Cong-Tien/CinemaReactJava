@@ -31,11 +31,11 @@ const AdminTemplate = (props) => {
     })
 
     if (!localStorage.getItem(USER_LOGIN)) {
-        alert('Bạn không có quyền truy cập vào trang này !')
+        alert('Đăng nhập để có thể vào hệ thống !')
         return <Navigate to="/" />
     }
 
-    if (userLogin.maLoaiNguoiDung !== 'QuanTri') {
+    if (userLogin.loaiTk !== 'admin') {
         alert('Bạn không có quyền truy cập vào trang này !')
         return <Navigate to="/" />
     }
@@ -54,7 +54,7 @@ const AdminTemplate = (props) => {
                             style={{ width: 40, height: 40 }}
                             className="m-auto rounded-full flex justify-center items-center bg-red-200 text-2xl"
                         >
-                            {userLogin.taiKhoan.substr(0, 1)}
+                            {userLogin.name.substr(0, 1)}
                         </div>{' '}
                         Hello ! {userLogin.taiKhoan}{' '}
                     </button>{' '}
@@ -81,8 +81,8 @@ const AdminTemplate = (props) => {
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
                     <div className="logo p-5">
-                        <img
-                            src="https://cyberlearn.vn/wp-content/uploads/2020/03/cyberlearn-min-new-opt2.png"
+                        <img style={{width:100,height:90,margin:"auto"}}
+                            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b358cda7-9810-44f9-9bab-5fcb82773cec/ddokknb-806fad8d-dc11-4993-8ef9-e47722fa78d1.png/v1/fill/w_894,h_894,strp/fox_logo_design__no_background__by_9987neondraws_ddokknb-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDAwMCIsInBhdGgiOiJcL2ZcL2IzNThjZGE3LTk4MTAtNDRmOS05YmFiLTVmY2I4Mjc3M2NlY1wvZGRva2tuYi04MDZmYWQ4ZC1kYzExLTQ5OTMtOGVmOS1lNDc3MjJmYTc4ZDEucG5nIiwid2lkdGgiOiI8PTQwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.JzP48xCSxkmMGVS3K48BV0AI6hnk_SNlCMue3oWTZ7c"
                             alt="..."
                         />
                     </div>

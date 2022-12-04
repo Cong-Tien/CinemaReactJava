@@ -19,7 +19,7 @@ function CinemaSystem(props) {
                     key={index}
                 >
                     <Tabs tabPosition={tabPosition} defaultActiveKey="1">
-                        {cinema.lstCumRap?.map((cumRap, index) => {
+                        {cinema.listCumrap?.map((cumRap, index) => {
                             return (
                                 <Tabs.TabPane
                                     tab={
@@ -58,29 +58,34 @@ function CinemaSystem(props) {
                                                             style={{ width: 100, height: 100 }}
                                                             src={phim.hinhAnh}
                                                             alt={phim.tenPhim}
-                                                            onError={({ currentTarget }) => {
-                                                                currentTarget.onerror = null // prevents looping
-                                                                currentTarget.src =
-                                                                    'https://scontent.fsgn5-11.fna.fbcdn.net/v/t39.30808-6/302033044_1534548460375461_2462156735916943716_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=LL2dMoYmeKMAX9PXgzl&_nc_ht=scontent.fsgn5-11.fna&oh=00_AfDkFXMnRwQmTbzvqcCkP6yd6YCZGZUTkk-raJxc9Ed_Sg&oe=6365D938'
-                                                            }}
+                                                            // onError={({ currentTarget }) => {
+                                                            //     currentTarget.onerror = null // prevents looping
+                                                            //     currentTarget.src =
+                                                            //         'https://scontent.fsgn5-11.fna.fbcdn.net/v/t39.30808-6/302033044_1534548460375461_2462156735916943716_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=LL2dMoYmeKMAX9PXgzl&_nc_ht=scontent.fsgn5-11.fna&oh=00_AfDkFXMnRwQmTbzvqcCkP6yd6YCZGZUTkk-raJxc9Ed_Sg&oe=6365D938'
+                                                            // }}
                                                         />
                                                         <div className="ml-2">
                                                             <h1 className="text-2xl text-green-700">
                                                                 {phim.tenPhim}
                                                             </h1>
-                                                            <p>{cumRap.diaChi}</p>
-                                                            <div className="grid grid-cols-6 gap-6">
-                                                                {phim.lstLichChieuTheoPhim
+                                                            <p className='text-gray-400'><i>{cumRap.diaChi}</i></p>
+                                                            <div className="grid grid-cols-3 gap-3 thong-tin-lich-chieu ml-5 text-center">
+                                                                {phim.listShowTime
                                                                     ?.slice(0, 12)
                                                                     .map((lichChieu, index) => {
                                                                         return (
                                                                             <NavLink
-                                                                                to={`/checkout/${lichChieu.maLichChieu}`}
+                                                                                to={`/checkout/${lichChieu.idShowtime}`}
                                                                                 key={index}
-                                                                                className="text-xl text-green-400"
+                                                                                style={{fontWeight:600}}
+                                                                                className='text-green-600 px-4 bg-gray-300 rounded-xl py-2 px-1 ml-3 mb-2'
                                                                             >
                                                                                 {moment(
-                                                                                    lichChieu.ngayChieuGioChieu
+                                                                                    lichChieu?.ngayChieuGioChieu
+                                                                                ).format('DD/MM/YYYY')}
+                                                                                <br/>
+                                                                                {moment(
+                                                                                    lichChieu?.ngayChieuGioChieu
                                                                                 ).format('hh:mm A')}
                                                                             </NavLink>
                                                                         )

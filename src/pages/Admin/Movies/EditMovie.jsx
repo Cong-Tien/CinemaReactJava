@@ -20,6 +20,7 @@ import {
     capNhatPhimApi,
     layThongTinPhimEditApi,
 } from '../../../redux/reducers/MovieReducer'
+import { HOST_BE } from '../../../util/config'
 
 export default function EditMovie() {
     const [imgSrc, setImgSrc] = useState('')
@@ -37,11 +38,12 @@ export default function EditMovie() {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            maPhim: thongTinPhimEdit.maPhim,
+            maPhim: thongTinPhimEdit?.id,
             tenPhim: thongTinPhimEdit?.tenPhim,
             trailer: thongTinPhimEdit?.trailer,
             moTa: thongTinPhimEdit?.moTa,
-            ngayKhoiChieu: moment(thongTinPhimEdit?.ngayKhoiChieu).format("DD/MM/YYYY"),
+            //ngayKhoiChieu: moment(thongTinPhimEdit?.ngayKhoiChieu).format("DD/MM/YYYY"),
+            ngayKhoiChieu: thongTinPhimEdit?.ngayKhoiChieu,
             dangChieu: thongTinPhimEdit?.dangChieu,
             sapChieu: thongTinPhimEdit?.sapChieu,
             hot: thongTinPhimEdit?.hot,
@@ -58,7 +60,7 @@ export default function EditMovie() {
                     formData.append(key, value[key])
                 } else {
                     if (value.hinhAnh !== null) {
-                        formData.append('File', value.hinhAnh, value.hinhAnh.name)
+                        formData.append('hinhAnh', value.hinhAnh)
                     }
                 }
             }
@@ -180,7 +182,7 @@ export default function EditMovie() {
                     />
                     <br />
                     <img
-                        src={imgSrc === '' ? thongTinPhimEdit.hinhAnh : imgSrc}
+                        src={imgSrc === '' ? `${HOST_BE}/${thongTinPhimEdit?.poster}` : imgSrc}
                         style={{ width: 200, height: 200 }}
                         alt="..."
                     />

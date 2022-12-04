@@ -57,7 +57,8 @@ const MovieReducer = createSlice({
             state.movieDetail = action.payload
         },
         addMovieAction: (state, action) => {
-            
+            // state.arrMovie = action.payload
+            // state.arrMovieDefault = action.payload
         },
         layThongTinPhimEdit: (state, action) => {
             state.thongTinPhimEdit = action.payload
@@ -76,17 +77,17 @@ export default MovieReducer.reducer
 export const getMovieApi = (tenPhim='') => {
     return async (dispatch) => {
        if(tenPhim.trim()!=''){
-        let result = await http.get(`QuanLyPhim/LayDanhSachPhim?tenPhim=${tenPhim}`)
+        let result = await http.get(`/movie/name?tenPhim=${tenPhim}`)
         //let result = await managerMovieService.layDanhSachBanner();
         console.log(result);
-        const action = getListMovieAction(result.data.content)
+        const action = getListMovieAction(result.data.data)
         dispatch(action)
        }
        else{
-        let result = await http.get('QuanLyPhim/LayDanhSachPhim')
+        let result = await http.get('/movie')
         //let result = await managerMovieService.layDanhSachBanner();
-        console.log(result);
-        const action = getListMovieAction(result.data.content)
+        console.log(result.data.data);
+        const action = getListMovieAction(result.data.data)
         dispatch(action)
        }
     }
@@ -94,9 +95,9 @@ export const getMovieApi = (tenPhim='') => {
 export const getMovieDetailApi = (idMovie) => {
     return async (dispatch) => {
         try {
-            let result = await http.get('QuanLyRap/LayThongTinLichChieuPhim?MaPhim=' + idMovie)
+            let result = await http.get('/movie/detail?idMovie=' + idMovie)
             //let result = await managerMovieService.layDanhSachBanner();
-            const action = getMovieDetailAction(result.data.content)
+            const action = getMovieDetailAction(result.data.data)
             dispatch(action)
         } catch (err) {
             console.log(err)
@@ -106,10 +107,10 @@ export const getMovieDetailApi = (idMovie) => {
 export const addMovieApi = (formData) => {
     return async (dispatch) => {
         try {
-            let result = await http.post('QuanLyPhim/ThemPhimUploadHinh',formData)
+            let result = await http.post('/movie/add',formData)
             alert("Chúc mừng bạn đã thêm thành công. Bạn thật tài giỏi!!")
             //let result = await managerMovieService.layDanhSachBanner();
-            const action = addMovieAction(result.data.content)
+            const action = addMovieAction(result.data.data)
             dispatch(action)
         } catch (err) {
             console.log(err)
@@ -120,8 +121,8 @@ export const addMovieApi = (formData) => {
 export const layThongTinPhimEditApi = (idMovie) => {
     return async (dispatch) => {
         try {
-            let result = await http.get(`QuanLyPhim/LayThongTinPhim?MaPhim=${idMovie}`)
-            const action = layThongTinPhimEdit(result.data.content)
+            let result = await http.get(`/movie/get-movie-edit?idMovie=${idMovie}`)
+            const action = layThongTinPhimEdit(result.data.data)
             dispatch(action)
         } catch (err) {
             console.log(err)
@@ -132,7 +133,7 @@ export const layThongTinPhimEditApi = (idMovie) => {
 export const xoaPhimApi = (idMovie) => {
     return async (dispatch) => {
         try {
-            let result = await http.delete(`QuanLyPhim/XoaPhim?MaPhim=${idMovie}`)
+            let result = await http.delete(`/movie?idMovie=${idMovie}`)
             alert("Xóa phim thành công Hehe")
             dispatch(getMovieApi())
         } catch (err) {
@@ -144,10 +145,10 @@ export const xoaPhimApi = (idMovie) => {
 export const capNhatPhimApi = (formData) => {
     return async (dispatch) => {
         try {
-            let result = await http.post('QuanLyPhim/CapNhatPhimUpload',formData)
+            let result = await http.post('/movie/edit',formData)
             alert("Chúc mừng bạn đã cập nhật thành công. Bạn thật tài giỏi!!")
             //let result = await managerMovieService.layDanhSachBanner();
-            const action = capNhatPhimAction(result.data.content)
+            const action = capNhatPhimAction(result.data.data)
             dispatch(action)
 
             dispatch(getMovieApi())

@@ -9,9 +9,7 @@ if(localStorage.getItem(USER_LOGIN)){
 }
 const initialState = {
     userLogin: user,
-    thongTinNguoiDung:{
-
-    }
+    thongTinNguoiDung:[]
 }
 
 const UserReducer = createSlice({
@@ -38,28 +36,45 @@ export default UserReducer.reducer
 export const userLoginApi = (userLogin) => {
     return async (dispatch) => {
         try {
-            let result = await http.post('QuanLyNguoiDung/DangNhap', userLogin)
+            let result = await http.post('http://localhost:8080/lecongtien/api/signin',userLogin)
             //let result = await managerMovieService.layDanhSachBanner();
             if (result.status === 200) {
-                const action = loginAction(result.data.content)
+                const action = loginAction(result.data.data)
                 dispatch(action)
+                console.log(result.data);
                
             }
-            history.back();
+           history.back();
         } catch (errors) {
-            console.log('errors', errors.response.data)
+            console.log('errors', errors)
+        }
+        
+    }
+}
+export const userLoginFacebookApi = (email) => {
+    return async (dispatch) => {
+        try {
+            let result = await http.post(`http://localhost:8080/lecongtien/api/signin/facebook?email=${email}`)
+            //let result = await managerMovieService.layDanhSachBanner();
+            if (result.status === 200) {
+                const action = loginAction(result.data.data)
+                dispatch(action)
+            }
+           history.back();
+        } catch (errors) {
+            console.log('errors', errors)
         }
         
     }
 }
 
-export const lichSuDatVeApi = () => {
+export const lichSuDatVeApi = (token) => {
     return async (dispatch) => {
         try {
-            let result = await http.post('QuanLyNguoiDung/ThongTinTaiKhoan')
+            let result = await http.get(`/signin?accessToken=${token}`)
             //let result = await managerMovieService.layDanhSachBanner();
             if (result.status === 200) {
-                const action = lichSuDatVeAction(result.data.content)
+                const action = lichSuDatVeAction(result.data.data)
                 dispatch(action)
                
             }

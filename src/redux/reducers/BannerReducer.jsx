@@ -30,9 +30,9 @@ export default BannerReducer.reducer
 //=================== asyn action ===================
 export const getBannerApi = () => {
   return async dispatch => {
-    let result = await http.get("QuanLyPhim/LayDanhSachBanner");
+    let result = await http.get(`/movie`);
     //let result = await managerMovieService.layDanhSachBanner();
-    const action =getBannerAction(result.data.content);
+    const action =getBannerAction(result.data.data);
     dispatch(action);
   }
 } 

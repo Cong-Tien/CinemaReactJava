@@ -37,3 +37,20 @@
     color: white;
     transform: rotateY(180deg);
   }
+.ant-modal-body{
+  padding: 2px 0 !important;
+}
+iframe{
+  width: 100% !important;
+  height: 600px;
+  padding: 0;
+}
+.ant-modal{
+  width: 1200px !important;
+}
+.ant-modal-footer{
+  padding: 0;
+}
+.ant-modal-wrap{
+  top: -80px !important;
+}

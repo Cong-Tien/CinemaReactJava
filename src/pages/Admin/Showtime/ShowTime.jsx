@@ -12,7 +12,7 @@ import {
     Select,
     Space,
 } from 'antd'
-import { getAllCinemaApi, getThongTinCumRap, taoLichChieu } from '../../../redux/reducers/CinemaReducer'
+import { getAllCinemaApi, getThongTinCumRap, getThongTinPhong, taoLichChieu } from '../../../redux/reducers/CinemaReducer'
 import { useFormik } from 'formik'
 import moment from 'moment'
 
@@ -25,6 +25,7 @@ export default function ShowTime() {
             maPhim: maPhim,
             ngayChieuGioChieu: '',
             maRap: '',
+            maPhong:"",
             giaVe: '',
         },
         onSubmit: (values) => {
@@ -52,6 +53,7 @@ export default function ShowTime() {
     const [state, setState] = useState({
         heThongRapChieu: [],
         cumRapChieu: [],
+        phong:[]
     })
     const handleChangeHeThongRap = async (value) => {
         //call api lấy thông tin cụm rạp
@@ -60,16 +62,28 @@ export default function ShowTime() {
             //gán giá trị cụm rạp vào state
             setState({
                 ...state,
-                cumRapChieu: result.data.content,
+                cumRapChieu: result.data.data,
             })
         } catch (err) {
             console.log(err)
         }
     }
-    const handleChangeCumRap = (value) => {
+    const handleChangeCumRap = async(value) => {
         formik.setFieldValue('maRap', value)
+        try {
+            let result = await getThongTinPhong(value)
+            //gán giá trị cụm rạp vào state
+            setState({
+                ...state,
+                phong: result.data.data,
+            })
+        } catch (err) {
+            console.log(err)
+        }
     }
-    console.log(state.heThongRapChieu)
+    const handleChangeRoom = async(value) => {
+        formik.setFieldValue('maPhong', value)
+    }
     useEffect(() => {
         try {
             const getData = async () => {
@@ -77,7 +91,7 @@ export default function ShowTime() {
                 const result = await getAllCinemaApi()
                 setState({
                     ...state,
-                    heThongRapChieu: result.data.content,
+                    heThongRapChieu: result.data.data,
                 })
             }
             getData()
@@ -90,7 +104,7 @@ export default function ShowTime() {
         //     value: heThong.maHeThongRap,
         // }))
         return state.heThongRapChieu?.map((heThong, index) => {
-            return { label: heThong.tenHeThongRap, value: heThong.maHeThongRap }
+            return { label: heThong.tenHtr, value: heThong.maHtr }
         })
     }
     let movieParams ={}
@@ -113,7 +127,7 @@ export default function ShowTime() {
             autoComplete="off"
         >
             <h1>Tạo Lịch chiếu - {tenPhim}</h1>
-            <img style={{width:150 ,height:200}} src={movieParams.hinhAnh} />
+            <img style={{width:150 ,height:200}} src={movieParams.poster} />
             <Form.Item label="Hệ thống Rạp">
                 <Select
                     options={convertSelectHeThongRap()}
@@ -125,10 +139,19 @@ export default function ShowTime() {
             <Form.Item label="Cụm Rạp">
                 <Select
                     options={state.cumRapChieu?.map((cumRap, index) => {
-                        return { label: cumRap.tenCumRap, value: cumRap.maCumRap }
+                        return { label: cumRap.nameCinema, value: cumRap.idCinema }
                     })}
                     onChange={handleChangeCumRap}
                     placeholder="Chọn Cụm Rạp"
+                />
+            </Form.Item>
+            <Form.Item label="Phòng chiếu">
+                <Select
+                    options={state.phong?.map((phong, index) => {
+                        return { label: phong.nameRoom, value: phong.idRoom }
+                    })}
+                    onChange={handleChangeRoom}
+                    placeholder="Chọn phòng chiếu"
                 />
             </Form.Item>
             <Form.Item label="Thời gian chiếu">

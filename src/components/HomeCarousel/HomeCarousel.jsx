@@ -26,8 +26,8 @@ export default function HomeCarousel() {
     const renderImg = () => {
         return arrBanner.map((banner,index) => {
             return <div key={index}>
-            <div className='h-full ' style={{...contentStyle, backgroundImage:`url(${banner.hinhAnh})`}}>
-                <img className='w-full opacity-0' src={banner.hinhAnh} />
+            <div className='h-full ' style={{...contentStyle, backgroundImage:`url(${banner.poster})`}}>
+                <img className='w-full opacity-0 object-cover' src={banner.poster} />
             </div>
         </div>
         })

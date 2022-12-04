@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useParams } from 'react-router-dom'
 import { getMovieDetailApi } from '../../redux/reducers/MovieReducer'
 import moment from 'moment'
+import { HOST_BE } from '../../util/config'
 
 export default function Detail() {
     const { movieDetail } = useSelector((state) => state.MovieReducer)
@@ -22,7 +23,7 @@ export default function Detail() {
             <div
                 className="App"
                 style={{
-                    backgroundImage: `url(${movieDetail.hinhAnh})`,
+                    backgroundImage: `url(${movieDetail.poster?.substring(0,4) != "http" ? `${HOST_BE}/${movieDetail?.poster}`: movieDetail.poster})`,
                     objectFit: 'contain',
                     display: 'flex',
                     flexDirection: 'column',
@@ -35,7 +36,7 @@ export default function Detail() {
                                 <img
                                     className="col-span-2"
                                     style={{ width: '250px', height: '350px', objectFit: 'cover' }}
-                                    src={movieDetail.hinhAnh}
+                                    src={movieDetail.poster?.substring(0,4) != "http" ? `${HOST_BE}/${movieDetail?.poster}`: movieDetail.poster}
                                 />
                                 <div className="col-span-2 text-left my-auto">
                                     <p className="text-sm">
@@ -102,7 +103,7 @@ export default function Detail() {
                                                 }
                                                 key={index}
                                             >
-                                                {htr.cumRapChieu?.map((cumRap, index) => {
+                                                {htr.listCumrap?.map((cumRap, index) => {
                                                     return (
                                                         <div className="mt-5" key={index}>
                                                             <div className="flex flex-row">
@@ -123,17 +124,17 @@ export default function Detail() {
                                                                 </div>
                                                             </div>
                                                             <div style={{display:'flex' ,flexDirection:'row',flexWrap:'wrap'}} className="thong-tin-lich-chieu ml-20">
-                                                                {cumRap.lichChieuPhim?.map(
+                                                                {cumRap.danhSachPhim?.map(
                                                                     (lichChieu, index) => {
                                                                         return (
                                                                             <NavLink
                                                                                 className='text-green-600 bg-gray-300 rounded-xl py-2 px-1 ml-3 mb-2'
                                                                                 style={{width:'22%'}}
-                                                                                to={`/checkout/${lichChieu.maLichChieu}`}
+                                                                                to={`/checkout/${lichChieu.idShowtime}`}
                                                                                 key={index}
                                                                             >
                                                                                 {
-                                                                                    moment(lichChieu.ngayChieuGioChieu).format('DD-MM-YYYY hh:mm A')
+                                                                                    moment(lichChieu.showtime).format('MM-DD-YYYY hh:mm A')
                                                                                 }
                                                                             </NavLink>
                                                                         )

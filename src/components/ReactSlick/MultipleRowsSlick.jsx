@@ -35,7 +35,7 @@ export default function MultipleRowsSlick(props) {
     const{dangChieu,sapChieu} = useSelector(state => state.MovieReducer);
 
     const renderMovie = () => {
-        return props.arrMovie.slice(0, 12).map((movie, index) => {
+        return props.arrMovie.slice(0,20).map((movie, index) => {
             return (
                 <div key={index} className="mt-3">
                     <MovieFlip phim={movie} />
