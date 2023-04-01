@@ -114,12 +114,11 @@ function CinemaSystem(props) {
                     marginBottom: 24,
                 }}
             >
-                Tab position:
                 <Radio.Group value={tabPosition} onChange={changeTabPosition}>
-                    <Radio.Button value="top">top</Radio.Button>
-                    <Radio.Button value="bottom">bottom</Radio.Button>
-                    <Radio.Button value="left">left</Radio.Button>
-                    <Radio.Button value="right">right</Radio.Button>
+                    <Radio.Button style={{width:100,height:100}} value="top"><img style={{width:100,height:100,objectFit:"cover"}} src="https://uk.pandora.net/dw/image/v2/AAKS_PRD/on/demandware.static/-/Sites-pandora-master-catalog/default/dwe61522c8/images/productimages/main/760268C01_RGB.JPG?sw=1000&sh=1000&sm=fit&sfrm=png&bgcolor=F5F5F5"/></Radio.Button>
+                    <Radio.Button style={{width:100,height:100}} value="bottom"><img style={{width:100,height:100,objectFit:"cover"}} src="https://wallpaper.dog/large/10790067.jpg"/></Radio.Button>
+                    <Radio.Button style={{width:100,height:100}} value="left"><img style={{width:100,height:100,objectFit:"cover",transform:"rotate(90deg)"}} src="https://terrigen-cdn-dev.marvel.com/content/prod/2x/60164_dsmm_doctorstrange_pop_glam-hires.jpg"/></Radio.Button>
+                    <Radio.Button style={{width:100,height:100}} value="right"><img style={{width:100,height:100,objectFit:"cover",transform:"rotate(270deg)"}} src="https://i.pinimg.com/474x/b9/92/82/b99282fed7a7c0d2a0458b5cf12d3c1a.jpg"/></Radio.Button>
                 </Radio.Group>
             </Space>
             <Tabs tabPosition={tabPosition} defaultActiveKey="1">

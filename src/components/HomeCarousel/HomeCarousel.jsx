@@ -3,6 +3,7 @@ import { Carousel } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBannerApi } from '../../redux/reducers/BannerReducer';
 import './HomeCarousel.css'
+import { HOST_BE } from '../../util/config';
 
 const contentStyle = {
     height: '660px',
@@ -26,8 +27,8 @@ export default function HomeCarousel() {
     const renderImg = () => {
         return arrBanner.map((banner,index) => {
             return <div key={index}>
-            <div className='h-full ' style={{...contentStyle, backgroundImage:`url(${banner.poster})`}}>
-                <img className='w-full opacity-0 object-cover' src={banner.poster} />
+            <div className='h-full ' style={{...contentStyle, backgroundImage:`url(${banner.poster?.substring(0,4) != "http" ? `${HOST_BE}/${banner?.poster}`: banner.poster})`}}>
+                <img className='w-full opacity-0 object-cover' src={banner.poster?.substring(0,4) != "http" ? `${HOST_BE}/${banner?.poster}`: banner.poster} />
             </div>
         </div>
         })

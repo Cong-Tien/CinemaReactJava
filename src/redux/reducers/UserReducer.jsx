@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import axios from 'axios';
 import { history } from '../../index';
 import { http, TOKEN_USER, USER_LOGIN } from '../../util/config'
 
@@ -37,6 +38,7 @@ export const userLoginApi = (userLogin) => {
     return async (dispatch) => {
         try {
             let result = await http.post('http://localhost:8080/lecongtien/api/signin',userLogin)
+    
             //let result = await managerMovieService.layDanhSachBanner();
             if (result.status === 200) {
                 const action = loginAction(result.data.data)
@@ -51,11 +53,32 @@ export const userLoginApi = (userLogin) => {
         
     }
 }
-export const userLoginFacebookApi = (email) => {
+
+export const registerApi = (userLogin) => {
     return async (dispatch) => {
         try {
-            let result = await http.post(`http://localhost:8080/lecongtien/api/signin/facebook?email=${email}`)
+            let result = await http.post('http://localhost:8080/lecongtien/api/signin/signup',userLogin)
             //let result = await managerMovieService.layDanhSachBanner();
+            if (result.status === 200) {
+                const action = loginAction(result.data.data)
+                dispatch(action)
+                console.log(result.data);
+               
+            }
+           history.back();
+        } catch (errors) {
+            console.log('errors', errors)
+        }
+        
+    }
+}
+
+export const userLoginFacebookApi = (accessToken) => {
+    return async (dispatch) => {
+        try {
+            let result = await http.get(`/facebook?access=${accessToken}`)
+            //let result = await managerMovieService.layDanhSachBanner();
+           console.log(result.data.data);
             if (result.status === 200) {
                 const action = loginAction(result.data.data)
                 dispatch(action)

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMyIsIkhldEhhblN0cmluZyI6IjA4LzA0LzIwMjMiLCJIZXRIYW5UaW1lIjoiMTY4MDkxMjAwMDAwMCIsIm5iZiI6MTY1Mjg5MzIwMCwiZXhwIjoxNjgxMDU5NjAwfQ.YWfEjzumDyUA3XRRvMIkDiD1cOGgRKyAAeOTP3qTT2c'
+export const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJ0eXBlXCI6XCJhdXRoZW5cIixcInVzZXJuYW1lXCI6XCJsZXRpZW4xODEwMjAwMUBnbWFpbC5jb21cIn0iLCJpYXQiOjE2NzA3MTE5MDksImV4cCI6MTY3MDc0MDcwOX0.8KR8ha5VNA3lfQxhkIu_VtDNKNr7HsGzapL6s43mGHE'
 export const TOKEN_USER = 'AccessToken'
 export const DOAMIN_SOCKET = 'http://localhost:8080/lecongtien/api/tiendzsocket'
 export const HOST_BE = 'http://localhost:8080/lecongtien/api/file'
@@ -17,7 +17,8 @@ http.interceptors.request.use((config) => {
     config.headers = {
         ...config.headers,
         //TokenCybersoft:TOKEN,
-        Authorization : "Bearer " + localStorage.getItem(TOKEN_USER)
+        Authorization : "Bearer " + (localStorage.getItem(TOKEN_USER) ? localStorage.getItem(TOKEN_USER) : TOKEN)
+        //Authorization : "Bearer " + TOKEN
         
     }
     return config

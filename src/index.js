@@ -32,6 +32,9 @@ import Dashboard from './pages/Admin/Dashborad/Dashboard'
 import AddMovie from './pages/Admin/Movies/AddMovie'
 import EditMovie from './pages/Admin/Movies/EditMovie'
 import MessagerBoot from './components/MessagerBoot'
+import ShowtimeManager from './pages/Admin/ShowtimeManager/ShowtimeManager'
+import SystemCinemaManager from './pages/Admin/Cinema/SystemCinemaManager'
+import CinemaManager from './pages/Admin/Cinema/CinemaManager'
 
 //const CheckoutTemplateLazy = lazy(() => import('./templates/CheckoutTemplate/CheckoutTemplate.jsx'))
 export const history = createBrowserHistory()
@@ -78,6 +81,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'))
                              <Route index element={<Movies />}></Route>
                             <Route path="" element={<Movies />}></Route>
                             <Route path="movies" element={<Movies />}></Route>
+                            <Route path="showtime" element={<ShowtimeManager />}></Route>
+                            <Route path="system" element={<SystemCinemaManager />}></Route>
+                            <Route path="cinema" element={<CinemaManager />}></Route>
                             <Route path="movies/addmovie" element={<AddMovie />}></Route>
                             <Route path="movies/edit">
                                 <Route path=":id" element={<EditMovie />}></Route>
@@ -91,7 +97,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'))
                     </Routes>
                 {/* </Suspense> */}
             </HistoryRouter>
-            <MessagerBoot/>
+            {/* <MessagerBoot/> */}
         </Provider>
     )
     

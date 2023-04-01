@@ -56,7 +56,7 @@ const AdminTemplate = (props) => {
                         >
                             {userLogin.name.substr(0, 1)}
                         </div>{' '}
-                        Hello ! {userLogin.taiKhoan}{' '}
+                        Hello ! {userLogin.name}{' '}
                     </button>{' '}
                     <button
                         className="text-blue-400"
@@ -81,10 +81,12 @@ const AdminTemplate = (props) => {
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
                     <div className="logo p-5">
+                        <NavLink to="/">
                         <img style={{width:100,height:90,margin:"auto"}}
                             src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b358cda7-9810-44f9-9bab-5fcb82773cec/ddokknb-806fad8d-dc11-4993-8ef9-e47722fa78d1.png/v1/fill/w_894,h_894,strp/fox_logo_design__no_background__by_9987neondraws_ddokknb-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDAwMCIsInBhdGgiOiJcL2ZcL2IzNThjZGE3LTk4MTAtNDRmOS05YmFiLTVmY2I4Mjc3M2NlY1wvZGRva2tuYi04MDZmYWQ4ZC1kYzExLTQ5OTMtOGVmOS1lNDc3MjJmYTc4ZDEucG5nIiwid2lkdGgiOiI8PTQwMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.JzP48xCSxkmMGVS3K48BV0AI6hnk_SNlCMue3oWTZ7c"
                             alt="..."
                         />
+                        </NavLink>
                     </div>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1" icon={<UserOutlined />}>
@@ -92,15 +94,34 @@ const AdminTemplate = (props) => {
                         </Menu.Item>
                         <SubMenu key="sub1" icon={<FileOutlined />} title="Movies">
                             <Menu.Item key="10" icon={<FileOutlined />}>
-                                <NavLink to="/admin/movies">Films</NavLink>
+                                <NavLink to="/admin/movies">Phim</NavLink>
                             </Menu.Item>
                             <Menu.Item key="11" icon={<FileOutlined />}>
                                 <NavLink to="/admin/movies/addmovie">Add Movie</NavLink>
                             </Menu.Item>
                         </SubMenu>
                         <Menu.Item key="3" icon={<DesktopOutlined />}>
-                            <NavLink to="/admin/showtime">Showtime</NavLink>
+                            <NavLink to="/admin/showtime">Lịch chiếu</NavLink>
                         </Menu.Item>
+                        <Menu.Item key="4" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/system">Hệ thống rạp</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="5" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/cinema">Cụm Rạp</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="6" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/showtime">Diễn viên</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="7" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/showtime">Thể loại</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="8" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/showtime">Phòng</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="9" icon={<DesktopOutlined />}>
+                            <NavLink to="/admin/showtime">Vé</NavLink>
+                        </Menu.Item>
+                      
                         {/* <SubMenu key="sub1" icon={<UserOutlined />} title="User">
                             <Menu.Item key="3">Tom</Menu.Item>
                             <Menu.Item key="4">Bill</Menu.Item>

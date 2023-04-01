@@ -78,14 +78,14 @@ export default function HeaderHome() {
                     />
                 </NavLink>
                 <ul className="items-stretch hidden space-x-3 lg:flex">
-                    <li className="flex hover:bg-pink-300 rounded-full">
+                    <li className="flex hover:bg-pink-300 hover:scale-95 rounded-full">
                         <NavLink
                             rel="noopener noreferrer"
                             to="/home"
                             className={({ isActive }) =>
                                 isActive
-                                    ? 'flex items-center px-4 -mb-1 border-b-2 dark:border-transparent dark:text-violet-400 dark:border-violet-400 text-pink-600 text-2xl'
-                                    : 'flex items-center px-4 -mb-1 border-b-2 dark:border-transparent dark:text-violet-400 text-pink-600 text-2xl'
+                                    ? 'flex items-center px-3 -mb-1 border-b-2 dark:border-transparent dark:text-violet-400 dark:border-violet-400 text-pink-600 text-lg'
+                                    : 'flex items-center px-3 -mb-1 border-b-2 dark:border-transparent dark:text-violet-400 text-pink-600 text-2xl'
                             }
                         >
                             Home
@@ -110,7 +110,7 @@ export default function HeaderHome() {
                             to="/"
                             className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
                         >
-                            Link
+                            Contact
                         </NavLink>
                     </li>
                     <li className="flex">
@@ -119,7 +119,7 @@ export default function HeaderHome() {
                             to="#"
                             className="flex items-center px-4 -mb-1 border-b-2 dark:border-transparent"
                         >
-                            Link
+                            Movies
                         </NavLink>
                     </li>
                 </ul>

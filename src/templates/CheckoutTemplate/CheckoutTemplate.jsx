@@ -17,7 +17,7 @@ export default function CheckoutTemplate() {
     }
 
   return (
-    <div> 
+    <div > 
         <Outlet/> 
     </div>
   )

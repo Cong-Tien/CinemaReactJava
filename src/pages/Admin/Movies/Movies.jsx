@@ -74,8 +74,8 @@ export default function Movies() {
             dataIndex: 'trailer',
             render: (text,movie) => {
                 return <Fragment>
-                    {/* <iframe style={{width:100,height:100}} src={movie.trailer}></iframe> */}
-                    <p>{movie.trailer}</p>
+                    <iframe style={{width:100,height:100}} src={movie.trailer}></iframe>
+                    {/* <p>{movie.trailer}</p> */}
                 </Fragment>
             },
             width: '15%',

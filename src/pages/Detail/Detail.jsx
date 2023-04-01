@@ -134,7 +134,7 @@ export default function Detail() {
                                                                                 key={index}
                                                                             >
                                                                                 {
-                                                                                    moment(lichChieu.showtime).format('MM-DD-YYYY hh:mm A')
+                                                                                    lichChieu.showtime
                                                                                 }
                                                                             </NavLink>
                                                                         )
